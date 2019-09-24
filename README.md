@@ -1,21 +1,32 @@
-## Создание RPM пакета
-Для создания RPM пакета я использовал исходники apache.
+## РЎРѕР·РґР°РЅРёРµ RPM РїР°РєРµС‚Р°
+Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ RPM РїР°РєРµС‚Р° СЏ РёСЃРїРѕР»СЊР·РѕРІР°Р» РёСЃС…РѕРґРЅРёРєРё apache.
+
 	sudo wget http://mirror.linux-ia64.org/apache//httpd/httpd-2.4.41.tar.bz2
-Из tarball  файла получил RPMS 
+	
+РР· tarball  С„Р°Р№Р»Р° РїРѕР»СѓС‡РёР» RPMS 
+
 	rpmbuild -ts httpd-2.4.41.tar.bz2
 	 ls /root/rpmbuild
 	BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS
-Установил все необходимые пакеты требуемые для установки 
+	
+РЈСЃС‚Р°РЅРѕРІРёР» РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїР°РєРµС‚С‹ С‚СЂРµР±СѓРµРјС‹Рµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё 
+
 	yum-builddep ./httpd.spec
-Дополнительно загрузил APR (apache portable runtime) библиотеки, требуемые для компиляции исходноика apache
+	
+Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ Р·Р°РіСЂСѓР·РёР» APR (apache portable runtime) Р±РёР±Р»РёРѕС‚РµРєРё, С‚СЂРµР±СѓРµРјС‹Рµ РґР»СЏ РєРѕРјРїРёР»СЏС†РёРё РёСЃС…РѕРґРЅРѕРёРєР° apache
+
 	wget http://archive.apache.org/dist/apr/apr-1.5.2.tar.bz2
 	rpmbuild -tb /apache/apr-1.5.2.tar.bz2
 	yum localinstall -y ./apr-devel-1.5.2-1.x86_64.rpm
 	yum localinstall -y ./apr-1.5.2-1.x86_64.rpm
-В файл ./httpd.spec внес изменения, заменив ContentDir с /var/wwww на /var/wwww/httpd24
-Запустил процесс компиляции
+	
+Р’ С„Р°Р№Р» ./httpd.spec РІРЅРµСЃ РёР·РјРµРЅРµРЅРёСЏ, Р·Р°РјРµРЅРёРІ ContentDir СЃ /var/wwww РЅР° /var/wwww/httpd24
+Р—Р°РїСѓСЃС‚РёР» РїСЂРѕС†РµСЃСЃ РєРѕРјРїРёР»СЏС†РёРё
+
 	rpmbuild -bb ./httpd.spec
-В результате было сформировано несколько rpm пакетов составляющих дистрибутив apache
+	
+Р’ СЂРµР·СѓР»СЊС‚Р°С‚Рµ Р±С‹Р»Рѕ СЃС„РѕСЂРјРёСЂРѕРІР°РЅРѕ РЅРµСЃРєРѕР»СЊРєРѕ rpm РїР°РєРµС‚РѕРІ СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёС… РґРёСЃС‚СЂРёР±СѓС‚РёРІ apache
+
 	ls /root/rpmbuild/RPMS/x86_6
         httpd-manual-2.4.41-1.x86_64.rpm
 	httpd-tools-2.4.41-1.x86_64.rpm
@@ -26,7 +37,9 @@
 	mod_proxy_html-2.4.41-1.x86_64.rpm
 	httpd-devel-2.4.41-1.x86_64.rpm      
 	mod_ssl-2.4.41-1.x86_64.rpm
-Запустил apache и проверил что он работает
+	
+Р—Р°РїСѓСЃС‚РёР» apache Рё РїСЂРѕРІРµСЂРёР» С‡С‚Рѕ РѕРЅ СЂР°Р±РѕС‚Р°РµС‚
+
 	service httpd restart
 
 	ps -ef | grep  httpd 
@@ -35,8 +48,9 @@
 	daemon   29929 29926  0 14:47 ?        00:00:00 /usr/sbin/httpd
 	daemon   29930 29926  0 14:47 ?        00:00:00 /usr/sbin/httpd
 ***
-## Создание репозитария
-Для создания репозитария создал каталог /var/www/httpd24/html/repo. Перенес туда все пакеты из RPMS. 
+## РЎРѕР·РґР°РЅРёРµ СЂРµРїРѕР·РёС‚Р°СЂРёСЏ
+Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ СЂРµРїРѕР·РёС‚Р°СЂРёСЏ СЃРѕР·РґР°Р» РєР°С‚Р°Р»РѕРі /var/www/httpd24/html/repo. РџРµСЂРµРЅРµСЃ С‚СѓРґР° РІСЃРµ РїР°РєРµС‚С‹ РёР· RPMS. 
+
 	createrepo /var/www/httpd24/html/repo
 	Spawning worker 0 with 9 pkgs
 	Workers Finished
@@ -46,4 +60,4 @@
 	Generating sqlite DBs
 	Sqlite DBs complete
 	
-В файле listing_repo.png  скриншот репозитария через web.
+Р’ С„Р°Р№Р»Рµ listing_repo.png  СЃРєСЂРёРЅС€РѕС‚ СЂРµРїРѕР·РёС‚Р°СЂРёСЏ С‡РµСЂРµР· web.
